@@ -19,6 +19,7 @@ okhttp = "5.1.0"
 materialIconsExtended = "1.7.8"
 mockk = "1.14.5"
 coil = "2.7.0"
+kotlinxCoroutinesTest = "1.10.2"
 
 [libraries]
 # AndroidX Core & Lifecycle
@@ -42,6 +43,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 
 # Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
