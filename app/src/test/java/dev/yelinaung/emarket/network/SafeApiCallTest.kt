@@ -48,6 +48,25 @@ class SafeApiCallTest {
     }
 
     @Test
+    fun `safeApiCall when apiCall throws HttpException 429 should return Result failure with NetworkException`() = runTest {
+
+        val errorMessage = "Test 429 Error"
+        val response = Response.error<Any>(429, errorMessage.toResponseBody("application/json".toMediaTypeOrNull()))
+        val httpException = HttpException(response)
+
+        val result = safeApiCall<Any> {
+            throw httpException
+        }
+
+        assertTrue(result.isFailure)
+        val exception = result.exceptionOrNull()
+        assertTrue(exception is NetworkException)
+        assertEquals("Usage limit reached", (exception as NetworkException).message)
+        assertEquals(429, exception.code)
+
+    }
+
+    @Test
     fun `safeApiCall when apiCall throws HttpException 500 should return Result failure with NetworkException`() = runTest {
 
         val errorMessage = "Test 500 Error"
@@ -80,8 +99,7 @@ class SafeApiCallTest {
         assertTrue(result.isFailure)
         val exception = result.exceptionOrNull()
         assertTrue(exception is NetworkException)
-        assertEquals("Something went wrong", (exception as NetworkException).message)
-        assertEquals(403, exception.code)
+        assertEquals(403, (exception as NetworkException).code)
 
     }
 

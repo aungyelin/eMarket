@@ -17,8 +17,9 @@ suspend fun <T> safeApiCall(
                 is HttpException -> {
                     val message = when (throwable.code()) {
                         404 -> "Not Found"
+                        429 -> "Usage limit reached"
                         500 -> "Internal Server Error"
-                        else -> "Something went wrong"
+                        else -> throwable.message ?: "Something went wrong"
                     }
                     Result.failure(NetworkException(message, throwable.code()))
                 }
