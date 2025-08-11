@@ -65,8 +65,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Splash Screen & Icons
-    implementation(libs.androidx.core.splashscreen)
+    // Icons
     implementation(libs.androidx.material.icons.extended)
 
     // Navigation
