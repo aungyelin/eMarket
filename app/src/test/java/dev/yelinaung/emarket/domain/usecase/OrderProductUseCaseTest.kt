@@ -1,7 +1,7 @@
 package dev.yelinaung.emarket.domain.usecase
 
-import dev.yelinaung.emarket.domain.model.Product
 import dev.yelinaung.emarket.domain.repository.StoreRepository
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -27,9 +27,7 @@ class OrderProductUseCaseTest {
     fun `invoke should return success when repository call is successful`() = runTest {
 
         val fakeAddress = "123 Main St"
-        val fakeProduct1 = Product(name = "Test Product", price = 10.0, imageUrl = "")
-        val fakeProduct2 = Product(name = "Another Product", price = 20.0, imageUrl = "")
-        val fakeProducts = listOf(fakeProduct1, fakeProduct2)
+        val fakeProducts = TestData.products.subList(0, 2)
 
         coEvery {
             storeRepository.orderProduct(fakeProducts, fakeAddress)
@@ -46,9 +44,7 @@ class OrderProductUseCaseTest {
     fun `invoke should return failure when repository call fails`() = runTest {
 
         val fakeAddress = "123 Main St"
-        val fakeProduct1 = Product(name = "Test Product", price = 10.0, imageUrl = "")
-        val fakeProduct2 = Product(name = "Another Product", price = 20.0, imageUrl = "")
-        val fakeProducts = listOf(fakeProduct1, fakeProduct2)
+        val fakeProducts = TestData.products.subList(0, 2)
 
         val exception = RuntimeException("Network error")
         coEvery {

@@ -1,7 +1,7 @@
 package dev.yelinaung.emarket.domain.usecase
 
-import dev.yelinaung.emarket.domain.model.Product
 import dev.yelinaung.emarket.domain.repository.StoreRepository
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -24,10 +24,7 @@ class GetProductsUseCaseTest {
     @Test
     fun `invoke returns success when repository returns success`() = runTest {
 
-        val expectedProducts = listOf(
-            Product(name = "Product 1", price = 10.0, imageUrl = ""),
-            Product(name = "Product 2", price = 20.0, imageUrl = "")
-        )
+        val expectedProducts = TestData.products
         coEvery { storeRepository.getProducts() } returns Result.success(expectedProducts)
 
         val result = getProductsUseCase()
@@ -49,4 +46,5 @@ class GetProductsUseCaseTest {
         assertEquals(expectedException, result.exceptionOrNull())
 
     }
+
 }

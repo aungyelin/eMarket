@@ -1,7 +1,7 @@
 package dev.yelinaung.emarket.network
 
 import dev.yelinaung.emarket.network.dto.OrderDto
-import dev.yelinaung.emarket.network.dto.ProductDto
+import dev.yelinaung.emarket.network.dto.ProductResponseDto
 import dev.yelinaung.emarket.network.dto.StoreInfoDto
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,7 +13,7 @@ interface ApiService {
     suspend fun getStoreInfo(): StoreInfoDto
 
     @GET("/products")
-    suspend fun getProducts(): List<ProductDto>
+    suspend fun getProducts(): ProductResponseDto
 
     @POST("/order")
     suspend fun postOrder(@Body order: OrderDto)

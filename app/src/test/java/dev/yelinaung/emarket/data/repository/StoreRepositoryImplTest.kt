@@ -2,11 +2,9 @@ package dev.yelinaung.emarket.data.repository
 
 import dev.yelinaung.emarket.data.mapper.toDto
 import dev.yelinaung.emarket.domain.model.DataException
-import dev.yelinaung.emarket.domain.model.Product
 import dev.yelinaung.emarket.network.ApiService
 import dev.yelinaung.emarket.network.dto.OrderDto
-import dev.yelinaung.emarket.network.dto.ProductDto
-import dev.yelinaung.emarket.network.dto.StoreInfoDto
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -31,18 +29,13 @@ class StoreRepositoryImplTest {
     @Test
     fun `getStoreInfo success should return store info`() = runBlocking {
 
-        val storeInfoDto = StoreInfoDto(
-            "My Store",
-            4.5,
-            "15:01:01.772Z",
-            "19:45:51.365Z"
-        )
-        coEvery { apiService.getStoreInfo() } returns storeInfoDto
+        val fakeStoreInfoResponse = TestData.storeInfoResponse
+        coEvery { apiService.getStoreInfo() } returns fakeStoreInfoResponse
 
         val result = storeRepository.getStoreInfo()
 
         assertTrue(result.isSuccess)
-        assertEquals("My Store", result.getOrNull()?.name)
+        assertEquals(fakeStoreInfoResponse.name, result.getOrNull()?.name)
         coVerify(exactly = 1) { apiService.getStoreInfo() }
 
     }
@@ -60,16 +53,17 @@ class StoreRepositoryImplTest {
     }
 
     @Test
-    fun `getProducts success should return product list`() = runBlocking {
+    fun `getProducts success should return product response with list of products`() = runBlocking {
 
-        val productDtos = listOf(ProductDto("Apple", 1.0, "url_apple"))
-        coEvery { apiService.getProducts() } returns productDtos
+        val fakeProductResponse = TestData.productResponse
+        val fakeProductList = fakeProductResponse.data.productResult.products
+        coEvery { apiService.getProducts() } returns fakeProductResponse
 
         val result = storeRepository.getProducts()
 
         assertTrue(result.isSuccess)
-        assertEquals(1, result.getOrNull()?.size)
-        assertEquals("Apple", result.getOrNull()?.first()?.name)
+        assertEquals(fakeProductList.size, result.getOrNull()?.size)
+        assertEquals(fakeProductList.first().name, result.getOrNull()?.first()?.name)
         coVerify(exactly = 1) { apiService.getProducts() }
 
     }
@@ -89,7 +83,7 @@ class StoreRepositoryImplTest {
     @Test
     fun `orderProduct success should complete without error`() = runBlocking {
 
-        val products = listOf(Product("Banana", 0.6, "url_banana"))
+        val products = TestData.products.subList(0, 2)
         val address = "123 Main St"
         val orderDto = OrderDto(products.map { it.toDto() }, address)
 
@@ -105,7 +99,7 @@ class StoreRepositoryImplTest {
     @Test
     fun `orderProduct network error should return network exception`() = runBlocking {
 
-        val products = listOf(Product("Banana", 0.6, "url_banana"))
+        val products = TestData.products.subList(0, 2)
         val address = "123 Main St"
         val orderDto = OrderDto(products.map { it.toDto() }, address)
 

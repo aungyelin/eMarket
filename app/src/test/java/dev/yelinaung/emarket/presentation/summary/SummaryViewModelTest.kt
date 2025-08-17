@@ -1,9 +1,9 @@
 package dev.yelinaung.emarket.presentation.summary
 
-import dev.yelinaung.emarket.domain.model.Product
 import dev.yelinaung.emarket.domain.usecase.OrderProductUseCase
 import dev.yelinaung.emarket.presentation.store.ProductUiModel
 import dev.yelinaung.emarket.util.MainDispatcherRule
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -32,12 +32,9 @@ class SummaryViewModelTest {
     }
 
     @Test
-    fun `order success updates uiState to Success`() = runTest {
+    fun `order success updates uiState to Success`() = runTest {mainDispatcherRule
 
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        ).map {
+        val fakeProducts = TestData.products.map {
             ProductUiModel(product = it, quantity = 2, isSelected = true)
         }
         val fakeAddress = "Test Address"
@@ -59,10 +56,7 @@ class SummaryViewModelTest {
     @Test
     fun `order failure updates uiState to Error`() = runTest {
 
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        ).map {
+        val fakeProducts = TestData.products.map {
             ProductUiModel(product = it, quantity = 2, isSelected = true)
         }
         val fakeAddress = "Test Address"
@@ -87,10 +81,7 @@ class SummaryViewModelTest {
     @Test
     fun `order emits Loading state before success`() = runTest {
 
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        ).map {
+        val fakeProducts = TestData.products.map {
             ProductUiModel(product = it, quantity = 2, isSelected = true)
         }
         val fakeAddress = "Test Address"
@@ -108,10 +99,7 @@ class SummaryViewModelTest {
     @Test
     fun `order emits Loading state before error`() = runTest {
 
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        ).map {
+        val fakeProducts = TestData.products.map {
             ProductUiModel(product = it, quantity = 2, isSelected = true)
         }
         val fakeAddress = "Test Address"
@@ -134,10 +122,7 @@ class SummaryViewModelTest {
     @Test
     fun `resetUiState updates uiState to Idle`() = runTest {
 
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        ).map {
+        val fakeProducts = TestData.products.map {
             ProductUiModel(product = it, quantity = 2, isSelected = true)
         }
         val fakeAddress = "Test Address"

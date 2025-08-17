@@ -23,7 +23,7 @@ class StoreRepositoryImpl @Inject constructor(
 
     override suspend fun getProducts(): Result<List<Product>> {
         return safeApiCall {
-            apiService.getProducts().map { it.toDomain() }
+            apiService.getProducts().data.productResult.products.map { it.toDomain() }
         }.mapNetworkErrorToDataException()
     }
 

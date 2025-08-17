@@ -1,7 +1,7 @@
 package dev.yelinaung.emarket.domain.usecase
 
-import dev.yelinaung.emarket.domain.model.StoreInfo
 import dev.yelinaung.emarket.domain.repository.StoreRepository
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -26,12 +26,7 @@ class GetStoreInfoUseCaseTest {
     @Test
     fun `invoke should return success when repository call is successful`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "The Coffee Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
+        val fakeStoreInfo = TestData.storeInfo
         coEvery { storeRepository.getStoreInfo() } returns Result.success(fakeStoreInfo)
 
         val result = getStoreInfoUseCase()

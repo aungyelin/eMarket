@@ -1,7 +1,6 @@
 package dev.yelinaung.emarket.presentation.summary
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size // Added import
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -39,7 +38,6 @@ import dev.yelinaung.emarket.domain.model.Product
 import dev.yelinaung.emarket.presentation.store.ProductUiModel
 import kotlinx.serialization.Serializable
 import java.util.Locale
-import java.util.UUID
 
 @Serializable
 data class SummaryRoute(val products: List<ProductUiModel>) : NavKey
@@ -194,8 +192,8 @@ fun SummaryScreenPreview() {
     SummaryScreen(
         products = listOf(
             ProductUiModel(
-                uuid = UUID.randomUUID(),
                 product = Product(
+                    id = 1,
                     name = "Product 1",
                     price = 10.0,
                     imageUrl = ""
@@ -204,8 +202,8 @@ fun SummaryScreenPreview() {
                 isSelected = true
             ),
             ProductUiModel(
-                uuid = UUID.randomUUID(),
                 product = Product(
+                    id = 2,
                     name = "Product 2",
                     price = 15.50,
                     imageUrl = ""

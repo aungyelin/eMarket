@@ -1,10 +1,9 @@
 package dev.yelinaung.emarket.presentation.store
 
-import dev.yelinaung.emarket.domain.model.Product
-import dev.yelinaung.emarket.domain.model.StoreInfo
 import dev.yelinaung.emarket.domain.usecase.GetProductsUseCase
 import dev.yelinaung.emarket.domain.usecase.GetStoreInfoUseCase
 import dev.yelinaung.emarket.util.MainDispatcherRule
+import dev.yelinaung.emarket.util.TestData
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,16 +31,8 @@ class StoreViewModelTest {
     @Test
     fun `init loads store data successfully`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        )
+        val fakeStoreInfo = TestData.storeInfo
+        val fakeProducts = TestData.products.subList(0, 2)
         coEvery { getStoreInfoUseCase() } returns Result.success(fakeStoreInfo)
         coEvery { getProductsUseCase() } returns Result.success(fakeProducts)
 
@@ -51,7 +42,7 @@ class StoreViewModelTest {
         assertFalse(uiState.isLoading)
         assertEquals(fakeStoreInfo, uiState.storeInfo)
         assertEquals(2, uiState.products.size)
-        assertEquals("Apple", uiState.products.first().product.name)
+        assertEquals(fakeProducts.first().name, uiState.products.first().product.name)
         assertNull(uiState.error)
 
     }
@@ -76,12 +67,7 @@ class StoreViewModelTest {
     @Test
     fun `init handles error when loading products`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
+        val fakeStoreInfo = TestData.storeInfo
         val exception = RuntimeException("Products error")
         coEvery { getStoreInfoUseCase() } returns Result.success(fakeStoreInfo)
         coEvery { getProductsUseCase() } returns Result.failure(exception)
@@ -118,16 +104,8 @@ class StoreViewModelTest {
     @Test
     fun `onProductSelected updates product selection`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        )
+        val fakeStoreInfo = TestData.storeInfo
+        val fakeProducts = TestData.products.subList(0, 2)
         coEvery { getStoreInfoUseCase() } returns Result.success(fakeStoreInfo)
         coEvery { getProductsUseCase() } returns Result.success(fakeProducts)
         viewModel = StoreViewModel(getStoreInfoUseCase, getProductsUseCase)
@@ -148,16 +126,8 @@ class StoreViewModelTest {
     @Test
     fun `onQuantityChanged updates product quantity`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        )
+        val fakeStoreInfo = TestData.storeInfo
+        val fakeProducts = TestData.products.subList(0, 2)
         coEvery { getStoreInfoUseCase() } returns Result.success(fakeStoreInfo)
         coEvery { getProductsUseCase() } returns Result.success(fakeProducts)
         viewModel = StoreViewModel(getStoreInfoUseCase, getProductsUseCase)
@@ -171,24 +141,16 @@ class StoreViewModelTest {
     }
 
     @Test
-    fun `onQuantityChanged does not update for quantity less than 1`() = runTest {
+    fun `onQuantityChanged does not update for quantity less than 0`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
-        val fakeProducts = listOf(
-            Product(name = "Apple", price = 10.0, imageUrl = "url_apple"),
-            Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
-        )
+        val fakeStoreInfo = TestData.storeInfo
+        val fakeProducts = TestData.products.subList(0, 2)
         coEvery { getStoreInfoUseCase() } returns Result.success(fakeStoreInfo)
         coEvery { getProductsUseCase() } returns Result.success(fakeProducts)
         viewModel = StoreViewModel(getStoreInfoUseCase, getProductsUseCase)
         val initialProductUiModel = viewModel.uiState.first().products.first()
 
-        viewModel.onQuantityChanged(initialProductUiModel, 0)
+        viewModel.onQuantityChanged(initialProductUiModel, -1)
 
         val updatedUiState = viewModel.uiState.first()
         assertEquals(initialProductUiModel.quantity, updatedUiState.products.first().quantity)
@@ -197,14 +159,9 @@ class StoreViewModelTest {
     @Test
     fun `clearSelectionsAndRefresh resets selections and reloads data`() = runTest {
 
-        val fakeStoreInfo = StoreInfo(
-            name = "Fruit Shop",
-            rating = 4.5,
-            openingTime = "15:01:01.772Z",
-            closingTime = "19:45:51.365Z"
-        )
-        val initialProduct = Product(name = "Apple", price = 10.0, imageUrl = "url_apple")
-        val refreshedProduct = Product(name = "Banana", price = 20.0, imageUrl = "url_banana")
+        val fakeStoreInfo = TestData.storeInfo
+        val initialProduct = TestData.products[0]
+        val refreshedProduct = TestData.products[2]
 
         var isInitCalled = false
 
@@ -219,24 +176,19 @@ class StoreViewModelTest {
         }
 
         viewModel = StoreViewModel(getStoreInfoUseCase, getProductsUseCase)
-        val productToSelect =
-            viewModel.uiState.first().products.first { it.product.name == initialProduct.name }
+        val productToSelect = viewModel.uiState.first().products.first { it.product.name == initialProduct.name }
         viewModel.onProductSelected(productToSelect)
         viewModel.onQuantityChanged(productToSelect.copy(isSelected = true), 3)
 
         val stateBeforeClear = viewModel.uiState.first()
         assertTrue(stateBeforeClear.products.first { it.product.name == initialProduct.name }.isSelected)
-        assertEquals(
-            3,
-            stateBeforeClear.products.first { it.product.name == initialProduct.name }.quantity
-        )
+        assertEquals(3, stateBeforeClear.products.first { it.product.name == initialProduct.name }.quantity)
 
         viewModel.clearSelectionsAndRefresh()
 
         val refreshedUiState = viewModel.uiState.first()
         assertTrue(refreshedUiState.products.any { it.product.name == refreshedProduct.name })
-        val newProductUiModel =
-            refreshedUiState.products.first { it.product.name == refreshedProduct.name }
+        val newProductUiModel = refreshedUiState.products.first { it.product.name == refreshedProduct.name }
         assertFalse(newProductUiModel.isSelected)
         assertEquals(0, newProductUiModel.quantity)
 

@@ -53,7 +53,7 @@ class StoreViewModel @Inject constructor(
     fun onProductSelected(product: ProductUiModel) {
         _uiState.update { state ->
             val updatedProducts = state.products.map {
-                if (it.uuid == product.uuid) {
+                if (it.product.id == product.product.id) {
                     it.copy(isSelected = !it.isSelected)
                 } else {
                     it
@@ -64,10 +64,10 @@ class StoreViewModel @Inject constructor(
     }
 
     fun onQuantityChanged(product: ProductUiModel, quantity: Int) {
-        if (quantity > 0) {
+        if (quantity >= 0) {
             _uiState.update { state ->
                 val updatedProducts = state.products.map {
-                    if (it.uuid == product.uuid) {
+                    if (it.product.id == product.product.id) {
                         it.copy(quantity = quantity)
                     } else {
                         it

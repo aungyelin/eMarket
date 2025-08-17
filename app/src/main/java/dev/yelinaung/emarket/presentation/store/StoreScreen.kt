@@ -54,7 +54,6 @@ import kotlinx.serialization.Serializable
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.UUID
 
 @Serializable
 data object StoreRoute : NavKey
@@ -100,7 +99,7 @@ fun StoreScreen(
                         CheckoutButton(
                             totalPrice = selectedProducts.sumOf { it.product.price * it.quantity },
                             onCheckout = {
-                                onClickCheckout(selectedProducts)
+                                onClickCheckout(selectedProducts.filter { it.quantity > 0 })
                             },
                             enabled = totalQuantity > 0
                         )
@@ -115,7 +114,7 @@ fun StoreScreen(
 @Composable
 fun ErrorState(errorMessage: String, onRetry: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -320,8 +319,8 @@ fun ProductItem(
 fun ProductItemPreview() {
     ProductItem(
         uiProduct = ProductUiModel(
-            uuid = UUID.randomUUID(),
             product = Product(
+                id = 1,
                 name = "Product Name",
                 price = 10.0,
                 imageUrl = "https://picsum.photos/200"
